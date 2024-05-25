@@ -44,7 +44,7 @@ EHMASS is a Python module designed to optimize your home energy usage with Home 
 
 Energy Management for Home Assistant (EMHASS) is an tool designed to optimize your home's energy usage. EMHASS uses a Linear Programming approach that can analyze electricity prices, power from solar panels, as well as energy stored in batteries. EMHASS is highly configurable, allowing integration with Home Assistant and other smart home systems. Whether you have solar panels, a battery, or just a controllable load, EMHASS can provide an optimized daily schedule for your devices, allowing you to save money and minimize your environmental impact.
 
-The complete documentation for this package is [available here](https://emhass.readthedocs.io/en/latest/).
+The complete documentation for this package is [available here](https://emhass.readthedocs.io/en/latest/legacy_install.html).
 
 ## What is EMHASS?
 
@@ -63,33 +63,16 @@ EMHASS works like this:
 ## Configuration and Installation
 
 There are three ways to install EMHASS.
+1. Add-on for Home Assistant OS and supervised users
+2. Docker running in standalone mode
+3. Legacy, using a python virtual environment 
 
 
+### Installation Type 1 - EMHASS add-on for Home Assistant
 
+For Home Assistant OS and Home Assistant Supervised users add-on is available which which is more user-friendly, as it's accessible in the Home Assistant user interface.  You can modify the configuration, review optimization plan results, and manually trigger a new optimization directly within Home Assistant.
 
-The package is meant to be highly configurable with an object oriented modular approach and a main configuration file defined by the user.
-EMHASS was designed to be integrated with Home Assistant, hence it's name. 
-Installation instructions and example Home Assistant automation configurations are given below.
-
-You must follow these steps to make EMHASS work properly:
-
-1) Define all the parameters in the configuration file according to your installation. See the description for each parameter in the **configuration** section.
-
-2) You most notably will need to define the main data entering EMHASS. This will be the `sensor_power_photovoltaics` for the name of the your hass variable containing the PV produced power and the variable `sensor_power_load_no_var_loads` for the load power of your household excluding the power of the deferrable loads that you want to optimize.
-
-3) Launch the actual optimization and check the results. This can be done manually using the buttons in the web ui or with a `curl` command like this: `curl -i -H 'Content-Type:application/json' -X POST -d '{}' http://localhost:5000/action/dayahead-optim`.
-
-4) If you’re satisfied with the optimization results then you can set the optimization and data publish task commands in an automation. You can read more about this on the **usage** section below.
-
-5) The final step is to link the deferrable loads variables to real switchs on your installation. An example code for this using automations and the shell command integration is presented below in the **usage** section.
-
-A more detailed workflow is given below:
-
-![](https://raw.githubusercontent.com/davidusb-geek/emhass/master/docs/images/workflow.png)
-
-### Method 1) The EMHASS add-on for Home Assistant OS and supervised users
-
-For Home Assistant OS and HA Supervised users, I've developed an add-on that will help you use EMHASS. The add-on is more user friendly as the configuration can be modified directly in the add-on options pane and as with the standalone docker it exposes a web ui that can be used to inspect the optimization results and manually trigger a new optimization.
+This is the recommended installation for users who are not familiar with as Docker or using a command line.
 
 You can find the add-on with the installation instructions here: [https://github.com/davidusb-geek/emhass-add-on](https://github.com/davidusb-geek/emhass-add-on)
 
@@ -97,7 +80,7 @@ The add-on usage instructions can be found on the documentation pane of the add-
 
 These architectures are supported: `amd64`, `armv7`, `armhf` and `aarch64`.
 
-### Method 2) Using Docker in standalone mode
+### Installation Type 2 - Docker in standalone mode
 
 You can also install EMHASS using docker. This can be in the same machine as Home Assistant (if using the supervised install method) or in a different distant machine. To install first pull the latest image from docker hub:
 ```bash
@@ -128,10 +111,34 @@ If you wish to set the web_server's diagrams to a timezone other than UTC, set `
 docker run -it --restart always -p 5000:5000  -e TZ="Europe/Paris"  -e LOCAL_COSTFUN="profit" -v $(pwd)/config_emhass.yaml:/app/config_emhass.yaml -v $(pwd)/secrets_emhass.yaml:/app/secrets_emhass.yaml --name DockerEMHASS <REPOSITORY:TAG>
 ```  
 
+### Installation Type 3 - Python Virtual Environment
+This installation type is recommended for more advanced users. It's installation instrurctions have been moved to a [separate document](https://emhass.readthedocs.io/en/latest/config.html).
+
+## Configuring EMHASS
+
+The package is meant to be highly configurable with an object oriented modular approach and a main configuration file defined by the user.
+EMHASS was designed to be integrated with Home Assistant, hence it's name. 
+Installation instructions and example Home Assistant automation configurations are given below.
+
+You must follow these steps to make EMHASS work properly:
+
+1) Define all the parameters in the configuration file according to your installation. See the description for each parameter in the **configuration** section.
+
+2) You most notably will need to define the main data entering EMHASS. This will be the `sensor_power_photovoltaics` for the name of the your hass variable containing the PV produced power and the variable `sensor_power_load_no_var_loads` for the load power of your household excluding the power of the deferrable loads that you want to optimize.
+
+3) Launch the actual optimization and check the results. This can be done manually using the buttons in the web ui or with a `curl` command like this: `curl -i -H 'Content-Type:application/json' -X POST -d '{}' http://localhost:5000/action/dayahead-optim`.
+
+4) If you’re satisfied with the optimization results then you can set the optimization and data publish task commands in an automation. You can read more about this on the **usage** section below.
+
+5) The final step is to link the deferrable loads variables to real switchs on your installation. An example code for this using automations and the shell command integration is presented below in the **usage** section.
+
+A more detailed workflow is given below:
+
+![](https://raw.githubusercontent.com/davidusb-geek/emhass/master/docs/images/workflow.png)
 
 ## Usage
 
-### Method 1) Add-on and docker standalone
+### EMHASS add-on and Docker
 
 If using the add-on or the standalone docker installation, it exposes a simple webserver on port 5000. You can access it directly using your brower, ex: http://localhost:5000.
 
@@ -147,24 +154,8 @@ With this web server you can perform RESTful POST commands on multiple ENDPOINTS
 
 A `curl` command can then be used to launch an optimization task like this: `curl -i -H 'Content-Type:application/json' -X POST -d '{}' http://localhost:5000/action/dayahead-optim`.
 
-### Method 2) Legacy method using a Python virtual environment
-
-To run a command simply use the `emhass` CLI command followed by the needed arguments.
-The available arguments are:
-- `--action`: That is used to set the desired action, options are: `perfect-optim`, `dayahead-optim`, `naive-mpc-optim`, `publish-data`, `forecast-model-fit`, `forecast-model-predict` and `forecast-model-tune`.
-- `--config`: Define path to the config.yaml file (including the yaml file itself)
-- `--costfun`: Define the type of cost function, this is optional and the options are: `profit` (default), `cost`, `self-consumption`
-- `--log2file`: Define if we should log to a file or not, this is optional and the options are: `True` or `False` (default)
-- `--params`: Configuration as JSON. 
-- `--runtimeparams`: Data passed at runtime. This can be used to pass your own forecast data to EMHASS.
-- `--debug`: Use `True` for testing purposes.
-- `--version`: Show the current version of EMHASS.
-
-For example, the following line command can be used to perform a day-ahead optimization task:
-```bash
-emhass --action 'dayahead-optim' --config '/home/user/emhass/config_emhass.yaml' --costfun 'profit'
-```
-Before running any valuable command you need to modify the `config_emhass.yaml` and `secrets_emhass.yaml` files. These files should contain the information adapted to your own system. To do this take a look at the special section for this in the [documentation](https://emhass.readthedocs.io/en/latest/config.html).
+### Legacy Installation
+ This method is recommended for more advanced users. It's usage instructions have been moved to a [separate document]((https://emhass.readthedocs.io/en/latest/config.html).).
 
 ## Home Assistant integration
 
