@@ -10,4 +10,4 @@ Please note: We have a [code of conduct](CODE_OF_CONDUCT.md), please follow it f
 2. If you've added code that should be tested, add tests.
 3. If needed please update the documentation, including in-code docstrings.
 4. Ensure the test suite passes by summoning a `pytest` command.
-6. Issue the pull request.
+5. Issue the pull request.
