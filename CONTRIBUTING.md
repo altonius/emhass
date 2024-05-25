@@ -1,9 +1,8 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via an issue,
-email, or any other method with the owners of this repository before making a change. 
+When contributing to this repository, please first discuss the change you wish to make via an issue, email, or any other method with the owners of this repository before making a change. 
 
-Please note: We have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
+Please note: We have a [code of conduct](CODE_OF_CONDUCT.md), please follow it for all your interactions with the project.
 
 ## Pull Request Process
    
