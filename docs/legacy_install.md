@@ -1,7 +1,7 @@
 ### Method 3) Legacy method using a Python virtual environment
 
-[!NOTE]
-This is the legacy method of installing Home Assistant, and requires a moderate understanding of your underlying operating system and python.
+> [!NOTE]
+> This is the legacy method of installing Home Assistant, and requires a moderate understanding of your underlying operating system and python.
 
 With this method it is recommended you install on a Python virtual environment.
 For this you will need `virtualenv`, install it using:
