@@ -70,49 +70,53 @@ There are three ways to install EMHASS.
 
 ### Installation Type 1 - EMHASS add-on for Home Assistant
 
-For Home Assistant OS and Home Assistant Supervised users add-on is available which which is more user-friendly, as it's accessible in the Home Assistant user interface.  You can modify the configuration, review optimization plan results, and manually trigger a new optimization directly within Home Assistant.
+*This is the recommended installation for users who are not familiar with Docker or using a command line.*
 
-This is the recommended installation for users who are not familiar with as Docker or using a command line.
+For Home Assistant OS and Home Assistant Supervised users an add-on is available, which which is more user-friendly as EMHASS is accessible within the Home Assistant user interface.  You can modify the configuration, review optimization plan results, and manually trigger a new optimization directly from within Home Assistant.
+
+To install add the EMHASS Add-on you will [install a third-party add-on](https://www.home-assistant.io/common-tasks/os/#installing-third-party-add-ons) by doing the following in Home Assistant:
+
+1. Open Home Assistant "Settings"
+2. Go to "Add-ons"
+3. Click on the "Add-On Store" button
+4. Click on the three dots in the top corner
+5. Click on "Repositories"
+6. Enter the URL `https://github.com/davidusb-geek/emhass-add-on` as a new repository, and then press "Add".
+7. You will then see "EMHASS Add-on Energy Management for Home Assistant" listed as an Add-on.
+
+Look for the EMHASS Add-on tab and when inside the Add-on click on `install`.
+
+Be patient, the installation may take some time depending on your hardware.
+
+When the installation has finished go to the `Configuration` tab to set the add-on parameters.
 
 You can find the add-on with the installation instructions here: [https://github.com/davidusb-geek/emhass-add-on](https://github.com/davidusb-geek/emhass-add-on)
 
 The add-on usage instructions can be found on the documentation pane of the add-on once installed or directly here: [EMHASS Add-on documentation](https://github.com/davidusb-geek/emhass-add-on/blob/main/emhass/DOCS.md)
 
-These architectures are supported: `amd64`, `armv7`, `armhf` and `aarch64`.
+The EMHASS add-on is supported on the following architectures: `amd64`, `armv7`, `armhf` and `aarch64`.
 
 ### Installation Type 2 - Docker in standalone mode
 
-You can also install EMHASS using docker. This can be in the same machine as Home Assistant (if using the supervised install method) or in a different distant machine. To install first pull the latest image from docker hub:
+*This installation type is for users who have more technical experience.*
+
+You can also install EMHASS using docker. EMHASS can run on the same machine as Home Assistant (using the supervised install method) or on a different machine.
+
+1. To install, first pull the latest image from Docker Hub
 ```bash
 docker pull davidusb/emhass-docker-standalone
 ```
-
-You can also build your image locally. For this clone this repository, setup your `config_emhass.yaml` file and use the provided make file with this command:
-```bash
-make -f deploy_docker.mk clean_deploy
-```
-Then load the image in the .tar file:
-```bash
-docker load -i <TarFileName>.tar
-```
-Finally check your image tag with `docker images` and launch the docker itself:
+2. Then check your image tag with `docker images` and launch EMHASS in Docker
 ```bash
 docker run -it --restart always -p 5000:5000 -e LOCAL_COSTFUN="profit" -v $(pwd)/config_emhass.yaml:/app/config_emhass.yaml -v $(pwd)/secrets_emhass.yaml:/app/secrets_emhass.yaml --name DockerEMHASS <REPOSITORY:TAG>
 ```
-  - If you wish to keep a local, persistent copy of the EMHASS generated data, create a local folder on your device, then mount said folder inside the container.  
-    ```bash
-    mkdir -p $(pwd)/data #linux: create data folder on local device
+You can find further options for running EMHASS in Docker (here)[install.md]
+---
 
-    docker run -it --restart always -p 5000:5000 -e LOCAL_COSTFUN="profit" -v $(pwd)/config_emhass.yaml:/app/config_emhass.yaml -v $(pwd)/data:/app/data  -v $(pwd)/secrets_emhass.yaml:/app/secrets_emhass.yaml --name DockerEMHASS <REPOSITORY:TAG>
-    ```
-    
-If you wish to set the web_server's diagrams to a timezone other than UTC, set `TZ` environment variable on:
-```bash
-docker run -it --restart always -p 5000:5000  -e TZ="Europe/Paris"  -e LOCAL_COSTFUN="profit" -v $(pwd)/config_emhass.yaml:/app/config_emhass.yaml -v $(pwd)/secrets_emhass.yaml:/app/secrets_emhass.yaml --name DockerEMHASS <REPOSITORY:TAG>
-```  
+ 
 
 ### Installation Type 3 - Python Virtual Environment
-This installation type is recommended for more advanced users. It's installation instrurctions have been moved to a [separate document](https://emhass.readthedocs.io/en/latest/config.html).
+This installation type is recommended for more advanced users. It's installation instrurctions have been moved to a [separate file](install.md).
 
 ## Configuring EMHASS
 
